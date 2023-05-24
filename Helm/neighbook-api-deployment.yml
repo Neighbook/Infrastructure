@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: neighbook-namespace
+  labels:
+    name: neighbook-namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neighbook-api
+  namespace: neighbook-namespace
+  labels:
+    app: neighbook-api
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: neighbook-api
+      app.kubernetes.io/name: neighbook-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: neighbook-api
+        app.kubernetes.io/name: neighbook-api
+    spec:
+      containers:
+      - name: neighbook
+        image: folyjohn/neighbook-api:0.0.4
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 3000
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+          - name: DATABASE_HOST
+            value: postgres-postgresql.postgres-namespace.svc.cluster.local
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_USERNAME
+            value: postgres
+          - name: DATABASE_PASSWORD
+            value: AodQaN0Mv9
+          - name: DATABASE_SYNCHRONIZE
+            value: "false"
+          - name: DATABASE_LOGGING
+            value: "false"
+          - name: MINIO_HOST
+            value: minio.minio-namespace.svc.cluster.local
+          - name: MINIO_ACCESS_KEY
+            value: admin
+          - name: MINIO_SECRET_KEY
+            value: ryVWARI1le
+          - name: LOGGING_LEVEL
+            value: "debug"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neighbook-api
+  namespace: neighbook-namespace
+  labels:
+    app: neighbook-api
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app.kubernetes.io/instance: neighbook-api
+    app.kubernetes.io/name: neighbook-api
