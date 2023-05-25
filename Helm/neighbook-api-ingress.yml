@@ -2,9 +2,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: neighbook-ingress
+  namespace: neighbook-namespace
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/root-path: /api
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
 spec:
   rules:
   - host: "demo.neighbook.tech"
@@ -17,3 +19,7 @@ spec:
             name: "neighbook-api"
             port:
               number: 3000
+  tls:
+    - hosts:
+      - demo.neighbook.tech
+      secretName: neighbook-api-tls

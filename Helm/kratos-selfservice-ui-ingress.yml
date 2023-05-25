@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: pgadmin-ingress
-  namespace: pgadmin-namespace
+  name: selfservice-ui-namespace-ingress
+  namespace: selfservice-ui-namespace
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/root-path: /pgadmin
+    nginx.ingress.kubernetes.io/root-path: /
     cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
 spec:
   rules:
@@ -13,10 +13,10 @@ spec:
     http:
       paths:
       - pathType: Prefix
-        path: /pgadmin
+        path: /
         backend:
           service:
-            name: "postgres-pgadmin-pgadmin4"
+            name: "kratos-selfservice-ui-kratos-selfservice-ui-node"
             port:
               number: 80
   tls:
