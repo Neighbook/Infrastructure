@@ -70,3 +70,5 @@ helm upgrade kratos ory/kratos -f kratos-values.yml --namespace kratos-namespace
 helm upgrade kratos-selfservice-ui ory/kratos-selfservice-ui-node -f kratos-selfservice-ui-values.yml --namespace selfservice-ui-namespace
 
 kubectl apply -f kratos-admin-ingress.yml
+
+helm show values ory/oathkeeper > oathkeeper-values.yml

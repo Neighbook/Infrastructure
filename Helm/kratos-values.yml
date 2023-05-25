@@ -295,7 +295,7 @@ kratos:
         - https://demo.neighbook.tech
       flows:
         settings:
-          ui_url: https://demo.neighbook.tech/error
+          ui_url: https://demo.neighbook.tech/settings
         verification:
           enabled: true
           ui_url: https://demo.neighbook.tech/verification
