@@ -123,7 +123,7 @@ ingress:
         secretName: neighbook-api-tls
 
 kratos:
-  development: true
+  development: false
   # -- Enable the initialization job. Required to work with a DB
 
   # -- Enables database migration
@@ -147,8 +147,7 @@ kratos:
   identitySchemas:
     "identity.default.schema.json": |
       {
-        "$id": "https://schemas.ory.sh/presets/kratos/identity.email.schema.json",
-        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$id": "https://schemas.ory.sh/presets/kratos/identity.basic.schema.json",
         "title": "Person",
         "type": "object",
         "properties": {
@@ -163,6 +162,12 @@ kratos:
                   "credentials": {
                     "password": {
                       "identifier": true
+                    },
+                    "webauthn": {
+                      "identifier": true
+                    },
+                    "totp": {
+                      "account_name": true
                     }
                   },
                   "recovery": {
@@ -171,7 +176,37 @@ kratos:
                   "verification": {
                     "via": "email"
                   }
+                },
+                "maxLength": 320
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "first": {
+                    "type": "string",
+                    "title": "First name",
+                    "maxLength": 256
+                  },
+                  "last": {
+                    "type": "string",
+                    "title": "Last name",
+                    "maxLength": 256
+                  }
                 }
+              },
+              "newsletter": {
+                "type": "boolean",
+                "title": "Newsletter subscription"
+              },
+              "username": {
+                "type": "string",
+                "title": "User name",
+                "maxLength": 256
+              },
+              "gender": {
+                "type": "string",
+                "title": "Gender",
+                "maxLength": 2
               }
             },
             "required": [
@@ -233,7 +268,12 @@ kratos:
 
     serve:
       public:
-        port: 4433
+        base_url: https://demo.neighbook.tech/kratos
+        cors:
+          enabled: true
+          allowed_origins:
+            - https://demo.neighbook.tech
+            - https://*.neighbook.tech
       admin:
         port: 4434
 
@@ -252,19 +292,23 @@ kratos:
         password:
           enabled: true
       allowed_return_urls:
-        - https://demo.neighbook.tech/
+        - https://demo.neighbook.tech
       flows:
         settings:
           ui_url: https://demo.neighbook.tech/error
         verification:
+          enabled: true
           ui_url: https://demo.neighbook.tech/verification
         recovery:
+          enabled: true
           ui_url: https://demo.neighbook.tech/recovery
         login:
           ui_url: https://demo.neighbook.tech/login
         registration:
           enabled: true
           ui_url: https://demo.neighbook.tech/registration
+        error:
+          ui_url: https://demo.neighbook.tech/error
 
 # -- Configuration options for the k8s deployment
 deployment:

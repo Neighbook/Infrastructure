@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kratos-ingress
+  namespace: kratos-namespace
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: "demo.neighbook.tech"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /kratos(/|$)(.*)
+        backend:
+          service:
+            name: "kratos-public"
+            port:
+              number: 80
+  tls:
+    - hosts:
+      - demo.neighbook.tech
+      secretName: neighbook-api-tls

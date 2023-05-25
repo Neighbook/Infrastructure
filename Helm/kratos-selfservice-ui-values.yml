@@ -128,16 +128,16 @@ deployment:
 affinity: {}
 
 # -- Set this to ORY Kratos's Admin URL
-kratosAdminUrl: "http://demo.neighbook.tech/admin"
+kratosAdminUrl: "https://demo.neighbook.tech/admin"
 
 # -- Set this to ORY Kratos's public URL
-kratosPublicUrl: "http://demo.neighbook.tech/kratos/"
+kratosPublicUrl: "https://demo.neighbook.tech/kratos"
 
 # -- Set this to ORY Kratos's public URL accessible from the outside world.
-kratosBrowserUrl: "http://demo.neighbook.tech/kratos/"
+kratosBrowserUrl: "https://demo.neighbook.tech/kratos"
 
 # -- The baseUrl
-baseUrl: "/auth"
+baseUrl: "/"
 
 # -- The jwksUrl
 jwksUrl: "http://oathkeeper-api"
