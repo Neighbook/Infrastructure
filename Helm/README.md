@@ -72,3 +72,11 @@ helm upgrade kratos-selfservice-ui ory/kratos-selfservice-ui-node -f kratos-self
 kubectl apply -f kratos-admin-ingress.yml
 
 helm show values ory/oathkeeper > oathkeeper-values.yml
+
+kubectl create namespace oathkeeper-namespace
+
+helm install oathkeeper ory/oathkeeper -f oathkeeper-values.yml --namespace oathkeeper-namespace
+
+helm upgrade oathkeeper ory/oathkeeper -f oathkeeper-values.yml --namespace oathkeeper-namespace
+
+kubectl apply -f grafana.yml

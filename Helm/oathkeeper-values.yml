@@ -161,6 +161,7 @@ oathkeeper:
       proxy:
         port: 4455
       api:
+        host: localhost
         port: 4456
       prometheus:
         port: 9000
@@ -391,4 +392,3 @@ test:
   busybox:
     repository: busybox
     tag: 1
-
