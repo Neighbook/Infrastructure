@@ -42,6 +42,11 @@ spec:
       containers:
         - name: grafana
           image: grafana/grafana:9.1.0
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: admin
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: admin
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -67,10 +72,10 @@ spec:
             timeoutSeconds: 1
           resources:
             requests:
-              cpu: 250m
+              cpu: 50m
               memory: 750Mi
             limits:
-              cpu: 500m
+              cpu: 100m
               memory: 1Gi
           volumeMounts:
             - mountPath: /var/lib/grafana
@@ -102,18 +107,18 @@ metadata:
   namespace: grafana-namespace
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/root-path: /grafana
     cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
   - host: "demo.neighbook.tech"
     http:
       paths:
       - pathType: Prefix
-        path: /grafana
+        path: /grafana(/|$)(.*)
         backend:
           service:
-            name: "neighbook-api"
+            name: "grafana"
             port:
               number: 3000
   tls:

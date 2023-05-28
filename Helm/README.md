@@ -4,6 +4,8 @@ helm repo add runix https://helm.runix.net
 
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
+helm repo add grafana https://grafana.github.io/helm-charts
+
 helm repo update
 
 helm install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
@@ -80,3 +82,5 @@ helm install oathkeeper ory/oathkeeper -f oathkeeper-values.yml --set-file=oathk
 helm upgrade oathkeeper ory/oathkeeper -f oathkeeper-values.yml --set-file=oathkeeper.accessRules=./rules.json --namespace oathkeeper-namespace
 
 kubectl apply -f grafana.yml
+
+helm show values grafana/grafana > grafana-values.yml
