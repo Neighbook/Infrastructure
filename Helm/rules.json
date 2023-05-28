@@ -1,0 +1,28 @@
+[
+  {
+    "id": "allow-anonymous-with-header-mutator",
+    "version": "v0.40.3",
+    "upstream": {
+      "url": "https://demo.neighbook.tech/pgadmin"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:80/pgadmin",
+      "methods": [
+        "*"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ]
+  }
+]

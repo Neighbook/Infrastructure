@@ -154,17 +154,71 @@ oathkeeper:
   # -- The ORY Oathkeeper configuration. For a full list of available settings, check:
   #   https://github.com/ory/oathkeeper/blob/master/docs/config.yaml
   config:
-    access_rules:
-      repositories:
-        - file:///etc/rules/access-rules.json
     serve:
       proxy:
         port: 4455
+        cors:
+          allow_credentials: true
+          debug: true
       api:
-        host: localhost
         port: 4456
+        cors:
+          allow_credentials: true
+          debug: true
+
       prometheus:
         port: 9000
+
+    errors:
+      fallback:
+        - json
+
+      handlers:
+        redirect:
+          enabled: true
+          config:
+            to: https://demo.neighbook.tech/login
+            when:
+              -
+                error:
+                  - unauthorized
+                  - forbidden
+                request:
+                  header:
+                    accept:
+                      - text/html
+        json:
+          enabled: true
+          config:
+            verbose: true
+
+    authenticators:
+      anonymous:
+        enabled: true
+        config:
+          subject: guest
+
+      cookie_session:
+        enabled: true
+        config:
+          check_session_url: https://demo.neighbook.tech/kratos/sessions/whoami
+          preserve_path: true
+          extra_from: "@this"
+          subject_from: "identity.id"
+          only:
+            - ory_kratos_session
+
+      noop:
+        enabled: true
+
+    authorizers:
+      allow:
+        enabled: true
+
+    mutators:
+      noop:
+        enabled: true
+
   # -- If set, uses the given JSON Web Key Set as the signing key for the ID Token Mutator.
   mutatorIdTokenJWKs: ""
   # -- If set, uses the given access rules.
