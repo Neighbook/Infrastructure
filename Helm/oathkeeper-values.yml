@@ -13,7 +13,7 @@ image:
   # -- ORY Oathkeeper image
   repository: oryd/oathkeeper
   # -- ORY Oathkeeper version
-  tag: v0.40.3
+  tag: v0.40.6
   # -- Image pull policy
   pullPolicy: IfNotPresent
   # -- use a busybox image from another repository
@@ -241,6 +241,15 @@ oathkeeper:
           config:
             headers:
               X-User-ID: '{{ print .Subject }}'
+      id_token:
+        enabled: true
+        config:
+          issuer_url: http://127.0.0.1:4455/
+          jwks_url: file:///etc/config/oathkeeper/id_token.jwks.json
+          claims: |
+            {
+              "session": {{ .Extra | toJson }}
+            }
 
   # -- If set, uses the given JSON Web Key Set as the signing key for the ID Token Mutator.
   mutatorIdTokenJWKs: ""

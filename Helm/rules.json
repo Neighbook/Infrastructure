@@ -22,7 +22,7 @@
     },
     "mutators": [
       {
-        "handler": "noop"
+        "handler": "header"
       }
     ],
     "error": {
