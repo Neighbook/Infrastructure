@@ -1,7 +1,5 @@
 env:
 ## Define user and password to access pgadmin4
-  email: "john.folly@utbm.fr"
-  password: "password"
   contextPath: "/pgadmin"
 ## Server definitions will be loaded at launch time. This allows connection
 ## information to be pre-loaded into the instance of pgAdmin4 in the container.

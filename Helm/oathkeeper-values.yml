@@ -158,12 +158,28 @@ oathkeeper:
       proxy:
         port: 4455
         cors:
+          allowed_origins:
+            - "*"
+          allowed_methods:
+            - POST
+            - GET
+            - PUT
+            - PATCH
+            - DELETE
+          allowed_headers:
+            - Authorization
+            - Content-Type
+          exposed_headers:
+            - Content-Type
           allow_credentials: true
           debug: true
+
       api:
         port: 4456
         cors:
           allow_credentials: true
+          allowed_origins:
+            - "*"
           debug: true
 
       prometheus:
@@ -177,7 +193,7 @@ oathkeeper:
         redirect:
           enabled: true
           config:
-            to: https://demo.neighbook.tech/login
+            to: https://demo.neighbook.tech/auth/login
             when:
               -
                 error:
@@ -214,10 +230,17 @@ oathkeeper:
     authorizers:
       allow:
         enabled: true
+      deny:
+        enabled: true
 
     mutators:
       noop:
         enabled: true
+      header:
+          enabled: true
+          config:
+            headers:
+              X-User-ID: '{{ print .Subject }}'
 
   # -- If set, uses the given JSON Web Key Set as the signing key for the ID Token Mutator.
   mutatorIdTokenJWKs: ""

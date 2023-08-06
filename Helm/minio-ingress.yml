@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: selfservice-ui-ingress
-  namespace: selfservice-ui-namespace
+  name: minio-api-ingress
+  namespace: minio-namespace
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/root-path: /
@@ -19,6 +19,47 @@ spec:
             name: "minio"
             port:
               number: 9000
+  tls:
+    - hosts:
+      - demo.neighbook.tech
+      secretName: neighbook-api-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-nodeport
+  namespace: minio-namespace
+spec:
+  ports:
+  - name: http
+    port: 9090
+    targetPort: 9090
+    nodePort: 32090
+  selector:
+    app: minio-console
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio-console-ingress
+  namespace: minio-namespace
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: "demo.neighbook.tech"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /minio(/|$)(.*)
+        backend:
+          service:
+            name: "minio-nodeport"
+            port:
+              number: 32090
   tls:
     - hosts:
       - demo.neighbook.tech

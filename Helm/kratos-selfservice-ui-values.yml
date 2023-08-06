@@ -140,7 +140,7 @@ kratosBrowserUrl: "https://demo.neighbook.tech/kratos"
 baseUrl: "/"
 
 # -- The jwksUrl
-jwksUrl: "http://oathkeeper-api"
+jwksUrl: "https://demo.neighbook.tech/mobily"
 
 projectName: "SecureApp"
 

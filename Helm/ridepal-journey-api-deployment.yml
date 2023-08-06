@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ridepal-journey-namespace
+  labels:
+    name: ridepal-journey-namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ridepal-journey-api
+  namespace: ridepal-journey-namespace
+  labels:
+    app: ridepal-journey-api
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: ridepal-journey-api
+      app.kubernetes.io/name: ridepal-journey-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: ridepal-journey-api
+        app.kubernetes.io/name: ridepal-journey-api
+    spec:
+      containers:
+      - name: ridepal-journey
+        image: folyjohn/ridepal-journey-api:0.0.9
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8080
+        env:
+          - name: DATABSE_HOST
+            value: postgres-postgresql.postgres-namespace.svc.cluster.local:5432/ridepal_journey
+          - name: DATABASE_NAME
+            value: postgres
+          - name: SPRING_DATASOURCE_USERNAME
+            value: postgres
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: AodQaN0Mv9
+          - name: SPRING_JPA_SHOW_SQL
+            value: "true"
+          - name: SPRING_JPA_SSL
+            value: "true"
+          - name: SPRING_THYMELEAF_CACHE
+            value: "false"
+          - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+            value: create
+          - name: SPRINGDOC_PATHS_TO_MATCH
+            value: /api/**
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: kafka-riedepal:9092
+          - name: KAFKA_CONSUMER_GROUP_ID
+            value: myGroup
+          - name: KAFKA_TOPIC_API
+            value: codey
+          - name: SERVER_PORT
+            value: "8080"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ridepal-journey-api
+  namespace: ridepal-journey-namespace
+  labels:
+    app: ridepal-journey-api
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app.kubernetes.io/instance: ridepal-journey-api
+    app.kubernetes.io/name: ridepal-journey-api
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ridepal-journey-ingress
+#   namespace: ridepal-journey-namespace
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+#     cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+#     nginx.ingress.kubernetes.io/rewrite-target: /$2
+# spec:
+#   rules:
+#   - host: "demo.neighbook.tech"
+#     http:
+#       paths:
+#       - pathType: Prefix
+#         path: "/journey(/|$)(.*)"
+#         backend:
+#           service:
+#             name: "ridepal-journey-api"
+#             port:
+#               number: 8080
+#   tls:
+#     - hosts:
+#       - demo.neighbook.tech
+#       secretName: neighbook-api-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ridepal-journey-ingress
+  namespace: ridepal-journey-namespace
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+    nginx.ingress.kubernetes.io/root-path: /
+spec:
+  rules:
+  - host: "demo.neighbook.tech"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: "ridepal-journey-api"
+            port:
+              number: 8080
+  tls:
+    - hosts:
+      - demo.neighbook.tech
+      secretName: neighbook-api-tls

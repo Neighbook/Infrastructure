@@ -270,10 +270,11 @@ kratos:
       public:
         base_url: https://demo.neighbook.tech/kratos
         cors:
-          enabled: true
+          enabled: false
           allowed_origins:
-            - https://demo.neighbook.tech
-            - https://*.neighbook.tech
+            - "*"
+            # - https://demo.neighbook.tech
+            # - https://*.neighbook.tech
       admin:
         port: 4434
 
@@ -285,7 +286,7 @@ kratos:
           url: file:///etc/config/identity.default.schema.json
 
     selfservice:
-      default_browser_return_url: https://demo.neighbook.tech/
+      default_browser_return_url: https://demo.neighbook.tech/auth/
       methods:
         link:
           enabled: true
@@ -295,20 +296,20 @@ kratos:
         - https://demo.neighbook.tech
       flows:
         settings:
-          ui_url: https://demo.neighbook.tech/settings
+          ui_url: https://demo.neighbook.tech/auth/settings
         verification:
           enabled: true
-          ui_url: https://demo.neighbook.tech/verification
+          ui_url: https://demo.neighbook.tech/auth/verification
         recovery:
           enabled: true
-          ui_url: https://demo.neighbook.tech/recovery
+          ui_url: https://demo.neighbook.tech/auth/recovery
         login:
-          ui_url: https://demo.neighbook.tech/login
+          ui_url: https://demo.neighbook.tech/auth/login
         registration:
           enabled: true
-          ui_url: https://demo.neighbook.tech/registration
+          ui_url: https://demo.neighbook.tech/auth/registration
         error:
-          ui_url: https://demo.neighbook.tech/error
+          ui_url: https://demo.neighbook.tech/auth/error
 
 # -- Configuration options for the k8s deployment
 deployment:

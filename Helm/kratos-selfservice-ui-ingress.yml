@@ -4,16 +4,16 @@ metadata:
   name: selfservice-ui-namespace-ingress
   namespace: selfservice-ui-namespace
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/root-path: /
-    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
   - host: "demo.neighbook.tech"
     http:
       paths:
       - pathType: Prefix
-        path: /
+        path: /auth(/|$)(.*)
         backend:
           service:
             name: "kratos-selfservice-ui-kratos-selfservice-ui-node"

@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: neighbook-namespace
+  name: reidepal-auth-namespace
   labels:
-    name: neighbook-namespace
+    name: reidepal-auth-namespace
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: neighbook-api
-  namespace: neighbook-namespace
+  name: reidepal-auth-api
+  namespace: reidepal-auth-namespace
   labels:
-    app: neighbook-api
+    app: reidepal-auth-api
 spec:
   replicas: 2
   strategy:
@@ -21,27 +21,20 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: neighbook-api
-      app.kubernetes.io/name: neighbook-api
+      app.kubernetes.io/instance: reidepal-auth-api
+      app.kubernetes.io/name: reidepal-auth-api
   template:
     metadata:
       labels:
-        app.kubernetes.io/instance: neighbook-api
-        app.kubernetes.io/name: neighbook-api
+        app.kubernetes.io/instance: reidepal-auth-api
+        app.kubernetes.io/name: reidepal-auth-api
     spec:
       containers:
-      - name: neighbook
-        image: folyjohn/neighbook-api:0.0.13
+      - name: reidepal-auth
+        image: folyjohn/ridepal-auth-api:0.0.2
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 3000
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
         env:
           - name: DATABASE_HOST
             value: postgres-postgresql.postgres-namespace.svc.cluster.local
@@ -56,19 +49,19 @@ spec:
           - name: DATABASE_LOGGING
             value: "false"
           - name: MINIO_HOST
-            value: storage.neighbook.tech
+            value: storage.reidepal-auth.tech
           - name: MINIO_USE_SSL
             value: "true"
           - name: MINIO_PORT
             value: "443"
           - name: MINIO_ACCESS_KEY
-            value: neighbook
+            value: reidepal-auth
           - name: MINIO_SECRET_KEY
             value: baeAgQm9Id82p2Bu2zL9
           - name: LOGGING_LEVEL
             value: "debug"
           - name: API_HOST
-            value: https://demo.neighbook.tech
+            value: https://demo.reidepal-auth.tech
         livenessProbe:
           httpGet:
             path: /api/v0/health
@@ -79,10 +72,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: neighbook-api
-  namespace: neighbook-namespace
+  name: reidepal-auth-api
+  namespace: reidepal-auth-namespace
   labels:
-    app: neighbook-api
+    app: reidepal-auth-api
 spec:
   ports:
     - name: http
@@ -90,17 +83,17 @@ spec:
       targetPort: 3000
       protocol: TCP
   selector:
-    app.kubernetes.io/instance: neighbook-api
-    app.kubernetes.io/name: neighbook-api
+    app.kubernetes.io/instance: reidepal-auth-api
+    app.kubernetes.io/name: reidepal-auth-api
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: neighbook-ingress
-  namespace: neighbook-namespace
+  name: reidepal-auth-ingress
+  namespace: reidepal-auth-namespace
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/root-path: /api
+    nginx.ingress.kubernetes.io/root-path: /apis
     cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
 spec:
@@ -109,37 +102,10 @@ spec:
     http:
       paths:
       - pathType: Prefix
-        path: /api
+        path: /apis
         backend:
           service:
-            name: "neighbook-api"
-            port:
-              number: 3000
-  tls:
-    - hosts:
-      - demo.neighbook.tech
-      secretName: neighbook-api-tls
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: neighbook-socket-ingress
-  namespace: neighbook-namespace
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/root-path: /socket.io
-    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
-spec:
-  rules:
-  - host: "demo.neighbook.tech"
-    http:
-      paths:
-      - pathType: Prefix
-        path: /socket.io
-        backend:
-          service:
-            name: "neighbook-api"
+            name: "reidepal-auth-api"
             port:
               number: 3000
   tls:

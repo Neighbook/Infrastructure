@@ -1,19 +1,20 @@
 [
   {
-    "id": "allow-anonymous-with-header-mutator",
+    "id": "allow-anonymous-with-header-admin",
     "version": "v0.40.3",
     "upstream": {
-      "url": "https://demo.neighbook.tech/pgadmin"
+      "preserve_host": true,
+      "url": "http://kratos-selfservice-ui-kratos-selfservice-ui-node.selfservice-ui-namespace.svc.cluster.local:80/auth/"
     },
     "match": {
-      "url": "http://<127.0.0.1|localhost>:80/pgadmin",
+      "url": "<https|http>://demo.neighbook.tech/ory/<.*>",
       "methods": [
-        "*"
+        "GET"
       ]
     },
     "authenticators": [
       {
-        "handler": "anonymous"
+        "handler": "cookie_session"
       }
     ],
     "authorizer": {
@@ -23,6 +24,12 @@
       {
         "handler": "noop"
       }
-    ]
+    ],
+    "error": {
+      "handler": "redirect",
+      "config": {
+        "to": "https://demo.neighbook.tech/auth/login"
+      }
+    }
   }
 ]

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oathkeeper-api-ingress
+  namespace: oathkeeper-namespace
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: "demo.neighbook.tech"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /mobily(/|$)(.*)
+        backend:
+          service:
+            name: "oathkeeper-api"
+            port:
+              number: 4456
+  tls:
+    - hosts:
+      - demo.neighbook.tech
+      secretName: neighbook-api-tls
