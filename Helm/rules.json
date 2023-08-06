@@ -3,11 +3,11 @@
     "id": "allow-anonymous-with-header-admin",
     "version": "v0.40.3",
     "upstream": {
-      "preserve_host": true,
-      "url": "http://kratos-selfservice-ui-kratos-selfservice-ui-node.selfservice-ui-namespace.svc.cluster.local:80/auth/"
+      "preserve_host": false,
+      "url": "http://kratos-admin.kratos-namespace.svc.cluster.local:80/"
     },
     "match": {
-      "url": "<https|http>://demo.neighbook.tech/ory/<.*>",
+      "url": "<https|http>://demo.neighbook.tech/admin/<.*>",
       "methods": [
         "GET"
       ]
