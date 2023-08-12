@@ -18,7 +18,41 @@
     },
     "authenticators": [
       {
-        "handler": "anonymous"
+        "handler": "cookie_session"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ],
+    "error": {
+      "handler": "redirect"
+    }
+  },
+  {
+    "id": "allow-journey-header-admin",
+    "version": "v0.40.3",
+    "upstream": {
+      "preserve_host": false,
+      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/"
+    },
+    "match": {
+      "url": "<https|http>://demo.neighbook.tech/api/<.*>",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "cookie_session"
       }
     ],
     "authorizer": {
@@ -34,14 +68,14 @@
     }
   },
   {
-    "id": "allow-anonymous-journey-header-admin",
+    "id": "allow-swrney-header-admin",
     "version": "v0.40.3",
     "upstream": {
       "preserve_host": false,
-      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/api/"
+      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/"
     },
     "match": {
-      "url": "<https|http>://demo.neighbook.tech/api/<.*>",
+      "url": "<https|http>://demo.neighbook.tech/swagger-ui/<.*>",
       "methods": [
         "GET",
         "POST",
@@ -68,14 +102,14 @@
     }
   },
   {
-    "id": "allow-swagger-journey-header-admin",
+    "id": "allow-swfg-header-admin",
     "version": "v0.40.3",
     "upstream": {
       "preserve_host": false,
-      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/swagger-ui/index.html"
+      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/"
     },
     "match": {
-      "url": "<https|http>://demo.neighbook.tech/swagger-ui/index.html",
+      "url": "<https|http>://demo.neighbook.tech/v3/<.*>",
       "methods": [
         "GET",
         "POST",
@@ -94,7 +128,7 @@
     },
     "mutators": [
       {
-        "handler": "id_token"
+        "handler": "noop"
       }
     ],
     "error": {
