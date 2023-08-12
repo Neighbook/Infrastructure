@@ -31,8 +31,8 @@ spec:
     spec:
       containers:
       - name: ridepal-journey
-        image: folyjohn/ridepal-journey-api:0.0.9
-        imagePullPolicy: IfNotPresent
+        image: folyjohn/ridepal-joueney:latest
+        imagePullPolicy: Always
         ports:
           - containerPort: 8080
         env:
@@ -85,55 +85,3 @@ spec:
   selector:
     app.kubernetes.io/instance: ridepal-journey-api
     app.kubernetes.io/name: ridepal-journey-api
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: ridepal-journey-ingress
-#   namespace: ridepal-journey-namespace
-#   annotations:
-#     kubernetes.io/ingress.class: nginx
-#     cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
-#     nginx.ingress.kubernetes.io/rewrite-target: /$2
-# spec:
-#   rules:
-#   - host: "demo.neighbook.tech"
-#     http:
-#       paths:
-#       - pathType: Prefix
-#         path: "/journey(/|$)(.*)"
-#         backend:
-#           service:
-#             name: "ridepal-journey-api"
-#             port:
-#               number: 8080
-#   tls:
-#     - hosts:
-#       - demo.neighbook.tech
-#       secretName: neighbook-api-tls
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ridepal-journey-ingress
-  namespace: ridepal-journey-namespace
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-cluster-issuer
-    nginx.ingress.kubernetes.io/root-path: /
-spec:
-  rules:
-  - host: "demo.neighbook.tech"
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: "ridepal-journey-api"
-            port:
-              number: 8080
-  tls:
-    - hosts:
-      - demo.neighbook.tech
-      secretName: neighbook-api-tls

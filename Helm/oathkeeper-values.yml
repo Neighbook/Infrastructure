@@ -245,7 +245,7 @@ oathkeeper:
         enabled: true
         config:
           issuer_url: http://127.0.0.1:4455/
-          jwks_url: file:///etc/config/oathkeeper/id_token.jwks.json
+          jwks_url: https://demo.neighbook.tech/mobily/.well-known/jwks.json
           claims: |
             {
               "session": {{ .Extra | toJson }}

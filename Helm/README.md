@@ -87,7 +87,7 @@ kubectl create namespace oathkeeper-namespace
 
 helm install oathkeeper ory/oathkeeper -f oathkeeper-values.yml --set-file=oathkeeper.accessRules=./rules.json --namespace oathkeeper-namespace
 
-helm upgrade oathkeeper ory/oathkeeper -f oathkeeper-values.yml --set-file=oathkeeper.accessRules=./rules.json --namespace oathkeeper-namespace
+helm upgrade oathkeeper ory/oathkeeper -f oathkeeper-values.yml --set-file=oathkeeper.accessRules=./rules.json --set-file oathkeeper.mutatorIdTokenJWKs=./jwks.json --namespace oathkeeper-namespace
 
 kubectl apply -f grafana.yml
 
@@ -98,3 +98,5 @@ kubectl apply -f oathkeeper-ingress.yml
 kubectl apply -f oathkeeper-api-ingress.yml
 
 kubectl apply -f ridepal-journey-api-deployment.yml
+
+docker run oryd/oathkeeper:v0.40.6 credentials generate --alg RS256 > jwks.json

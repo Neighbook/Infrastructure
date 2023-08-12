@@ -1,6 +1,6 @@
 [
   {
-    "id": "allow-anonymous-with-header-admin",
+    "id": "allow-swagger",
     "version": "v0.40.3",
     "upstream": {
       "preserve_host": false,
@@ -9,12 +9,16 @@
     "match": {
       "url": "<https|http>://demo.neighbook.tech/admin/<.*>",
       "methods": [
-        "GET"
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
       ]
     },
     "authenticators": [
       {
-        "handler": "cookie_session"
+        "handler": "anonymous"
       }
     ],
     "authorizer": {
@@ -22,14 +26,80 @@
     },
     "mutators": [
       {
-        "handler": "header"
+        "handler": "id_token"
       }
     ],
     "error": {
-      "handler": "redirect",
-      "config": {
-        "to": "https://demo.neighbook.tech/auth/login"
+      "handler": "redirect"
+    }
+  },
+  {
+    "id": "allow-anonymous-journey-header-admin",
+    "version": "v0.40.3",
+    "upstream": {
+      "preserve_host": false,
+      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/api/"
+    },
+    "match": {
+      "url": "<https|http>://demo.neighbook.tech/api/<.*>",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
       }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ],
+    "error": {
+      "handler": "redirect"
+    }
+  },
+  {
+    "id": "allow-swagger-journey-header-admin",
+    "version": "v0.40.3",
+    "upstream": {
+      "preserve_host": false,
+      "url": "http://ridepal-journey-api.ridepal-journey-namespace.svc.cluster.local:8080/swagger-ui/index.html"
+    },
+    "match": {
+      "url": "<https|http>://demo.neighbook.tech/swagger-ui/index.html",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "id_token"
+      }
+    ],
+    "error": {
+      "handler": "redirect"
     }
   }
+
 ]
